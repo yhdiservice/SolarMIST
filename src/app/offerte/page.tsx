@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import OfferteForm from "@/components/OfferteForm";
 
 export const metadata: Metadata = {
@@ -16,7 +17,9 @@ export default function OffertePage() {
       </p>
 
       <div className="mt-10 rounded-2xl border border-deep/10 bg-white p-8">
-        <OfferteForm />
+        <Suspense>
+          <OfferteForm />
+        </Suspense>
       </div>
     </section>
   );

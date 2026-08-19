@@ -2,6 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { categories, getCategory } from "@/data/categories";
+import CategoryHero from "@/components/CategoryHero";
+import FeatureSection from "@/components/FeatureSection";
+import FaqSection from "@/components/FaqSection";
 
 export function generateStaticParams() {
   return categories.map((cat) => ({ category: cat.slug }));
@@ -32,37 +35,30 @@ export default async function CategoryPage({
 
   return (
     <>
-      <section className="border-b border-deep/10 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-          <span className="text-sm font-semibold text-sky-dark">
-            {cat.label}
-          </span>
-          <h1 className="mt-2 text-4xl font-bold text-deep">{cat.tagline}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-deep/70">{cat.intro}</p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link
-              href="/offerte"
-              className="rounded-full bg-gold px-6 py-3 text-sm font-semibold text-deep transition hover:bg-gold-dark hover:text-white"
-            >
-              Offerte aanvragen
-            </Link>
-            <Link
-              href={`/${cat.slug}/installatie`}
-              className="rounded-full border border-deep/15 px-6 py-3 text-sm font-semibold text-deep transition hover:border-sky hover:text-sky-dark"
-            >
-              Hoe werkt de installatie?
-            </Link>
-          </div>
+      <CategoryHero category={cat} />
+
+      <section className="bg-bg">
+        <div className="mx-auto max-w-3xl px-4 py-12 text-center sm:px-6">
+          <p className="text-lg text-deep/70">{cat.intro}</p>
+          <Link
+            href={`/${cat.slug}/installatie`}
+            className="mt-6 inline-block text-sm font-semibold text-sky-dark hover:underline"
+          >
+            Hoe werkt de installatie? →
+          </Link>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="rounded-2xl border border-dashed border-deep/20 bg-white p-8 text-deep/60">
-          Content voor deze pagina (voordelen, prijsindicatie, veelgestelde
-          vragen) volgt zodra we de opbouw van de referentiepagina hebben
-          verwerkt.
-        </div>
-      </section>
+      {cat.features.map((feature, index) => (
+        <FeatureSection
+          key={feature.heading}
+          feature={feature}
+          imageOnLeft={index % 2 === 1}
+          tinted={index % 2 === 1}
+        />
+      ))}
+
+      <FaqSection faqs={cat.faqs} contactEmail="info@solarmist.nl" />
     </>
   );
 }

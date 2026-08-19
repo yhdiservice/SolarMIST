@@ -1,13 +1,20 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { categories } from "@/data/categories";
+import { categories, getCategory } from "@/data/categories";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
 export default function OfferteForm() {
+  const searchParams = useSearchParams();
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+
+  const prefillEmail = searchParams.get("email") ?? "";
+  const prefillMessage = searchParams.get("notitie") ?? "";
+  const prefillCategory = getCategory(searchParams.get("categorie") ?? "")
+    ?.slug;
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -75,6 +82,7 @@ export default function OfferteForm() {
             name="email"
             type="email"
             required
+            defaultValue={prefillEmail}
             className="mt-1 w-full rounded-lg border border-deep/15 px-4 py-2.5 outline-none focus:border-sky focus:ring-2 focus:ring-sky/30"
           />
         </div>
@@ -99,7 +107,7 @@ export default function OfferteForm() {
           id="category"
           name="category"
           required
-          defaultValue=""
+          defaultValue={prefillCategory ?? ""}
           className="mt-1 w-full rounded-lg border border-deep/15 bg-white px-4 py-2.5 outline-none focus:border-sky focus:ring-2 focus:ring-sky/30"
         >
           <option value="" disabled>
@@ -121,6 +129,7 @@ export default function OfferteForm() {
           id="message"
           name="message"
           rows={4}
+          defaultValue={prefillMessage}
           className="mt-1 w-full rounded-lg border border-deep/15 px-4 py-2.5 outline-none focus:border-sky focus:ring-2 focus:ring-sky/30"
         />
       </div>
